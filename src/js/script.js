@@ -55,30 +55,39 @@
   class Product{
     constructor(){
       const thisProduct = this;
-
-      console.log('new Product: ', thisProduct);
     }
   }
-  Product();
+
+
 
   const app = {
+
     initMenu: function(){
       const testProduct = new Product();
-      console.log('testProduct', testProduct);
+      console.log('testProduct: ', testProduct);
+    },
+
+    initData: function(){
+      const thisApp = this;
+  
+      thisApp.data = dataSource;
     },
 
     init: function(){
+
       const thisApp = this;
+      // const thisApp = this;
       // console.log('*** App starting ***');
       // console.log('thisApp:', thisApp);
       // console.log('classNames:', classNames);
       // console.log('settings:', settings);
       // console.log('templates:', templates);
 
+      thisApp.initData();
       thisApp.initMenu();
-
     },
   };
+
   app.initMenu();
   app.init();
 }
