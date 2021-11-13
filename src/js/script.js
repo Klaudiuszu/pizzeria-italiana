@@ -61,11 +61,12 @@
       thisProduct.id = id;
       thisProduct.data = data;
 
-      thisProduct.renderInMenu();
-
       console.log(thisProduct);
 
       thisProduct.renderInMenu();
+      thisProduct.getElements();
+      thisProduct.initAccordion();
+
     }
     renderInMenu() {
       const thisProduct = this;
@@ -76,7 +77,17 @@
       /* find menu container */
       const menuContainer = document.querySelector(select.containerOf.menu);
       /* add element to menu */
-      menuContainer.appendChild(this.element); // KRZYSZTOF CZEMU THIS?
+      menuContainer.appendChild(thisProduct.element); // KRZYSZTOF CZEMU THIS?
+    }
+
+    getElements(){
+      const thisProduct = this;
+    
+      thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
+      thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
+      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
+      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
     }
 
     initAccordion() {
@@ -92,24 +103,38 @@
         event.preventDefault();
         //console.log(clickableTrigger);
         /* find active product (product that has active class) */
-        const activeProducts = document.querySelector(select.all.menuProductsActive);
+        const activeProduct = document.querySelector(select.all.menuProductsActive);
+        console.log('activeProduct',activeProduct);
         /* if there is active product and it's not thisProduct.element, remove class active from it */
-        for(let activeProduct of activeProducts){
 
-          if(activeProduct || activeProduct != thisProduct.element){
+        if(activeProduct && activeProduct != thisProduct.element){
 
-            activeProduct.classList.remove('active');
+          activeProduct.classList.remove('active');
+          thisProduct.element.classList.add('active');
+          
+        } else {
+          thisProduct.element.classList.toggle('active');
 
-          } else {
-            this.element.classList.add('active');
-          }
-          /* toggle active class on thisProduct.element */
-          thisProduct.element.classList.toggle(classNames.menuProduct.wrapperActive);
         }
       }
+      
       );
     }
+
+    initOrderForm(){
+      const thisProduct = this;
+      console.log(thisProduct);
+    }
+  
+    processOrder(){
+      const thisProduct = this;
+      console.log(thisProduct);
+    }
+
   }
+
+  
+
   const app = {
 
     initMenu: function(){
