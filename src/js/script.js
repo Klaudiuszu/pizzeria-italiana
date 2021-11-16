@@ -61,13 +61,11 @@
       thisProduct.id = id;
       thisProduct.data = data;
 
-      console.log(thisProduct);
-
       thisProduct.renderInMenu();
       thisProduct.getElements();
       thisProduct.initAccordion();
       
-      thisProduct.initOrderForm();
+      //thisProduct.initOrderForm();
       thisProduct.processOrder();
 
     }
@@ -142,37 +140,40 @@
       });
 
       const thisProduct = this;
-      console.log(thisProduct);
     }
   
-    processOrder(){
-
+    processOrder() {
       const thisProduct = this;
-
-  // covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']}
-  const formData = utils.serializeFormToObject(thisProduct.form);
-  console.log('formData', formData);
-
-  // set price to default price
-  let price = thisProduct.data.price;
-
-  // for every category (param)...
-  for(let paramId in thisProduct.data.params) {
-    // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
-    const param = thisProduct.data.params[paramId];
-    console.log(paramId, param);
-
-    // for every option in this category
-    for(let optionId in param.options) {
-      // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
-      const option = param.options[optionId];
-      console.log(optionId, option);
-    }
-  }
-
-  // update calculated price in the HTML
-  thisProduct.priceElem.innerHTML = price;
-}
+    
+      // covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']}
+      const formData = utils.serializeFormToObject(thisProduct.form);
+      
+    
+      // set price to default price
+      let price = thisProduct.data.price;
+      // for every category (param)...
+      for(let paramId in thisProduct.data.params) {
+        // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
+        const param = thisProduct.data.params[paramId];
+    
+        // for every option in this category
+        for(let optionId in param.options) {
+          // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
+          const option = param.options[optionId];
+          //console.log(option);
+          if(formData[paramId] && formData[paramId].includes(optionId)) {
+            
+            if(!option.default == false) {
+              price += option.price;
+              
+            }
+          }
+          console.log();
+        }
+      }
+    
+      // update calculated price in the HTML
+      thisProduct.priceElem.innerHTML = price;
     }
   }
 
@@ -183,7 +184,6 @@
     initMenu: function(){
     
       const thisApp = this;
-      console.log('thisApp.data:', thisApp.data);
       for(let productData in thisApp.data.products){
         new Product(thisApp.data.products[productData].id, thisApp.data.products[productData]);
       }
@@ -208,6 +208,5 @@
       thisApp.initMenu();
     },
   };
-
   app.init();
 }
