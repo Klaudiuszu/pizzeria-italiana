@@ -167,7 +167,7 @@
               
               
             } else if(!option.default == true) {
-              price -= option.price;
+              price += option.price;
             } 
           }
           
