@@ -89,6 +89,7 @@
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     }
 
     initAccordion() {
@@ -105,7 +106,7 @@
         //console.log(clickableTrigger);
         /* find active product (product that has active class) */
         const activeProduct = document.querySelector(select.all.menuProductsActive);
-        console.log('activeProduct',activeProduct);
+        //console.log('activeProduct',activeProduct);
         /* if there is active product and it's not thisProduct.element, remove class active from it */
 
         if(activeProduct && activeProduct != thisProduct.element){
@@ -143,34 +144,50 @@
     processOrder() {
       const thisProduct = this;
     
-      // covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']}
       const formData = utils.serializeFormToObject(thisProduct.form);
       
-    
-      // set price to default price
       let price = thisProduct.data.price;
-      // for every category (param)...
+      
       for(let paramId in thisProduct.data.params) {
-        // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
+        
         const param = thisProduct.data.params[paramId];
-        console.log(thisProduct.data.params);
-        // for every option in this category
+        
         for(let optionId in param.options) {
-          // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
+          
           const option = param.options[optionId];
-          console.log(optionId, option);
-          //console.log(option);
-          if(formData[paramId] && formData[paramId].includes(optionId)) {
+          
+          const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
+          console.log(optionSelected);
+
+          const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId);
+          //console.log(optionImage);
+    
+          if(optionSelected) {
 
             if(!option.default == false) {
               price += option.price;
-              
+              //console.log(option.default)
               
             } else if(!option.default == true) {
               price += option.price;
-            } 
+            }
+
+            if(optionImage){
+
+              //console.log(optionImage);
+            
+              thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId).classList.add(classNames.menuProduct.imageVisible);
+
+              console.log(option.default);
+            }
+          } else {
+            console.log('.' + paramId + '-' + optionId);
+            if(optionImage){
+              thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId).classList.remove(classNames.menuProduct.imageVisible);
+            }
+        
           }
-          
+                    
         }
       }
     
@@ -178,8 +195,6 @@
       thisProduct.priceElem.innerHTML = price;
     }
   }
-
-  
 
   const app = {
 
