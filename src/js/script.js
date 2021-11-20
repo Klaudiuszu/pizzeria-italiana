@@ -166,7 +166,7 @@
 
             if(!option.default == false) {
               price += option.price;
-              //console.log(option.default)
+              //console.log(option.default)W
               
             } else if(!option.default == true) {
               price += option.price;
@@ -193,6 +193,15 @@
     
       // update calculated price in the HTML
       thisProduct.priceElem.innerHTML = price;
+    }
+  }
+
+  class amountWidget{
+    constructor(element){
+      const thisWidget = this;
+
+      console.log('AmountWidget:', thisWidget);
+      console.log('constructor arguments: ', element);
     }
   }
 
