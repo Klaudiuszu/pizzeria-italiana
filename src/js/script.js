@@ -8,6 +8,7 @@
   const select = {
     templateOf: {
       menuProduct: '#template-menu-product',
+      cartProduct: '#template-cart-product',
     },
     containerOf: {
       menu: '#product-list',
@@ -28,7 +29,7 @@
     },
     widgets: {
       amount: {
-        input: 'input[name="amount"]',
+        input: 'input[class="amount"]',
         linkDecrease: 'a[href="#less"]',
         linkIncrease: 'a[href="#more"]',
       },
