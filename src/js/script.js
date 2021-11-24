@@ -119,6 +119,7 @@
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
       thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
       thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
+      
     }
 
     initAccordion() {
@@ -310,14 +311,32 @@
       const thisCart = this;
 
       thisCart.products = [];
+
       thisCart.getElements(element);
-      console.log('new Cart', thisCart);
+      thisCart.initActions();
+      
     }
 
     getElements(element){
       const thisCart = this;
+
       thisCart.dom = {};
+      
       thisCart.dom.wrapper = element;
+
+      thisCart.dom.toggleTrigger= thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
+
+    }
+
+    initActions(){
+
+      const thisCart = this;
+
+      thisCart.dom.toggleTrigger.addEventListener('click', function(event){
+        event.preventDefault();
+
+        thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
+      });
     }
   }
 
