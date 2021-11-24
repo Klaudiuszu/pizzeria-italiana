@@ -305,6 +305,22 @@
 
   }
 
+  class Cart{
+    constructor(element){
+      const thisCart = this;
+
+      thisCart.products = [];
+      thisCart.getElements(element);
+      console.log('new Cart', thisCart);
+    }
+
+    getElements(element){
+      const thisCart = this;
+      thisCart.dom = {};
+      thisCart.dom.wrapper = element;
+    }
+  }
+
   const app = {
 
     initMenu: function(){
@@ -313,6 +329,13 @@
       for(let productData in thisApp.data.products){
         new Product(thisApp.data.products[productData].id, thisApp.data.products[productData]);
       }
+    },
+
+    initCart: function(){
+      const thisApp = this;
+
+      const cartElem = document.querySelector(select.containerOf.cart);
+      thisApp.cart = new Cart(cartElem);
     },
 
     initData: function(){
@@ -332,6 +355,7 @@
 
       thisApp.initData();
       thisApp.initMenu();
+      thisApp.initCart();
     },
   };
   app.init();
