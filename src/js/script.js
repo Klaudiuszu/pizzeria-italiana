@@ -260,12 +260,42 @@
       productSummary.priceSingle = thisProduct.priceSingle;
 
       productSummary.params = {};
+      productSummary.params = thisProduct.prepareCartProductParams();
 
-
+    
       return productSummary;
     }
 
+    prepareCartProductParams(){
     
+      const thisProduct = this;
+    
+      const formData = utils.serializeFormToObject(thisProduct.form);
+      const params = {};
+      
+    
+      // for very category (param)
+      for(let paramId in thisProduct.data.params) {
+        const param = thisProduct.data.params[paramId];
+    
+        
+        params[paramId] = {
+          label: param.label,
+          options: {}
+        };
+    
+        // for every option in this category
+        for(let optionId in param.options) {
+          const option = param.options[optionId];
+          const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
+    
+          if(optionSelected) {
+            params[paramId].options[optionId] = option.label;
+          }
+        }
+      }
+      return params;
+    }  
   }
   class amountWidget{
     constructor(element){
