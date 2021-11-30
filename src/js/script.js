@@ -366,36 +366,37 @@
     }
 
   }
-
   class Cart{
-    constructor(element){
+    constructor(element) {
       const thisCart = this;
 
       thisCart.products = [];
 
       thisCart.getElements(element);
       thisCart.initActions();
-      
-    }
 
+    }
     getElements(element){
       const thisCart = this;
 
       thisCart.dom = {};
-      
+
       thisCart.dom.wrapper = element;
 
       thisCart.dom.toggleTrigger= thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
-      thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
+      thisCart.dom.productList= thisCart.dom.wrapper.querySelector(select.cart.productList);
       thisCart.dom.deliveryFee = thisCart.dom.wrapper.querySelector(select.cart.deliveryFee);
       thisCart.dom.subtotalPrice = thisCart.dom.wrapper.querySelector(select.cart.subtotalPrice);
       thisCart.dom.totalPrice = thisCart.dom.wrapper.querySelectorAll(select.cart.totalPrice);
       thisCart.dom.totalNumber = thisCart.dom.wrapper.querySelector(select.cart.totalNumber);
+      thisCart.dom.phone = thisCart.dom.wrapper.querySelector(select.cart.phone);
+      thisCart.dom.address = thisCart.dom.wrapper.querySelector(select.cart.address);
+
+      thisCart.dom.form = thisCart.dom.wrapper.querySelector(select.cart.form);
     }
 
     initActions(){
       const thisCart = this;
-      //console.log(thisCart.dom.wrapper);
 
       thisCart.dom.toggleTrigger.addEventListener('click', function(event){
         event.preventDefault();
@@ -404,39 +405,43 @@
       thisCart.dom.productList.addEventListener('updated', function(){
         thisCart.update();
       });
+      thisCart.dom.productList.addEventListener('remove', function(event){
+        thisCart.remove(event.detail.cartProduct);
+      });
+      thisCart.dom.form.addEventListener('submit', function(event){
+        event.preventDefault();
+        thisCart.sendOrder();
+      });    
     }
-
     add(menuProduct){
-
       const thisCart = this;
-      const generatedHTML =  templates.cartProduct(menuProduct);
-      
+
+      const generatedHTML = templates.cartProduct(menuProduct);
+
       const generatedDOM = utils.createDOMFromHTML(generatedHTML);
 
       thisCart.dom.productList.appendChild(generatedDOM);
-      
+
       thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
-      
-      
+      //console.log('thisCart.products', thisCart.products);
       thisCart.update();
     }
-
     update(){
       const thisCart = this;
 
       thisCart.deliveryFee = 0;
       thisCart.totalNumber = 0;
       thisCart.subtotalPrice = 0;
-
-      for (const product of thisCart.products) {
-        thisCart.totalNumber += product.amount;
-        thisCart.subtotalPrice += product.price;
+  
+      for(const product of thisCart.products){
+        thisCart.totalNumber = thisCart.totalNumber + product.amount;
+        thisCart.subtotalPrice = thisCart.subtotalPrice + product.price;
       }
-
+  
       if(thisCart.totalNumber !== 0){
         thisCart.deliveryFee = settings.cart.defaultDeliveryFee;
       }
-
+  
       thisCart.totalPrice = thisCart.subtotalPrice + thisCart.deliveryFee;
       thisCart.dom.totalNumber.innerHTML = thisCart.totalNumber;
       thisCart.dom.subtotalPrice.innerHTML = thisCart.subtotalPrice;
@@ -444,10 +449,21 @@
       for (let totalPrice of thisCart.dom.totalPrice) {
         totalPrice.innerHTML = thisCart.totalPrice;
       }
-
     }
-  }
 
+    remove(removedProduct){
+      const thisCart = this;
+
+      const indexOfRemovedProduct = thisCart.products.indexOf(removedProduct);
+
+      removedProduct.dom.wrapper.remove();
+
+      thisCart.products.splice(indexOfRemovedProduct, 1);
+
+      thisCart.update();
+    }
+
+  }
   class CartProduct{
     constructor(menuProduct, element){
       const thisCartProduct = this;
@@ -484,7 +500,6 @@
         thisCartProduct.dom.price.innerHTML = thisCartProduct.priceSingle;
       });
     }
-
     remove(){
       const thisCartProduct = this;
 
@@ -509,8 +524,6 @@
         thisCartProduct.remove();
       });
     }
-    
-
   }
 
   const app = {
